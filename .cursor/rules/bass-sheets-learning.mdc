@@ -1,0 +1,47 @@
+---
+description: Pedagogical workflow and project context for Bass Sheets Library
+alwaysApply: true
+---
+
+# Bass Sheets Library — Agent Guide
+
+Side project: personal bass sheet catalog. Work little by little. Prefer Italian.
+
+## Source of truth
+
+Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe.
+
+**Progress:** TAPPA 1 done (Next.js + TS + Tailwind on GitHub). Next: TAPPA 2 (UI foundation).
+
+## Pedagogical workflow (mandatory)
+
+For every step:
+
+1. **Explain** what/why/commands/files — do NOT run yet
+2. **Wait** for explicit OK (`ok`, `procedi`)
+3. **Execute** only that step
+4. **Stop** and summarize; propose the next step and wait again
+
+Never batch multiple implementation steps. Never skip ahead to later tappe unless asked.
+
+User controls pace: pause, skip explanations, ask for more detail, or change approach — always allowed.
+
+## Communication
+
+- Concise; one step at a time
+- After each tappa: short recap + what was learned + preview of next tappa
+- If unclear, ask before acting
+
+## Stack (planned)
+
+Next.js App Router, TypeScript, Tailwind, shadcn/ui, Supabase, Vercel. Free-tier only. Private personal use.
+
+## Knowledge capture (cerebro)
+
+Do **not** use Obsidian for this project. Persist lasting concepts in the **cerebro** wiki:
+
+- Path: `../../cerebro` from this repo → `C:\Users\dravasi\Documents\react-tests\cerebro`
+- Follow `docs/README.md` there (concepts EN, raw IT when applicable)
+- Only write notes when the user asks (e.g. "salva in cerebro…")
+- Prefer atomic notes under `docs/concepts/` (e.g. `web/`, or a `nextjs/` domain as needed); link from maps when useful
+- Learning-mode skills live in cerebro (`.cursor/skills/`); invoke only if the user asks to study a concept that way
