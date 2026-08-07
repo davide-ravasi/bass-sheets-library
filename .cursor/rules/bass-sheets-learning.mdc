@@ -11,7 +11,13 @@ Side project: personal bass sheet catalog. Work little by little. Prefer Italian
 
 Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe.
 
-**Progress:** TAPPA 1 done (Next.js + TS + Tailwind on GitHub). Next: TAPPA 2 (UI foundation).
+**Progress:**
+- TAPPA 1 done (Next.js + TS + Tailwind on GitHub).
+- TAPPA 2 in progress (UI foundation):
+  - Step 1 done — shadcn init (Base UI + preset Nova)
+  - Step 2 done — components: button, card, input, dialog, select, badge
+  - **Next (lunedì): Step 3** — app layout (header + nav/sidebar, update `layout.tsx` + home shell in `page.tsx`). User may ask agent to implement or DIY with instructions.
+- Stack DB decision: Supabase (for included image storage), not Mongo.
 
 ## Pedagogical workflow (mandatory)
 
