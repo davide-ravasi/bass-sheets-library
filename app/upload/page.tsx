@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { SheetUploadForm } from "@/components/upload/sheet-upload-form";
 
 export default function UploadPage() {
   return (
@@ -17,17 +11,7 @@ export default function UploadPage() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Upload not implemented yet</CardTitle>
-          <CardDescription>Upload not implemented yet.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            Upload not implemented yet.
-          </p>
-        </CardContent>
-      </Card>
+      <SheetUploadForm />
     </div>
   );
 }
