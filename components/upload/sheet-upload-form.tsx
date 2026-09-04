@@ -10,21 +10,67 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/client";
 
 export function SheetUploadForm() {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // Pezzo 2: upload to Storage + insert into sheets
-    console.log({
+    if (!file) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setMessage(null);
+
+    const supabase = createClient();
+    const extension = file.name.includes(".")
+      ? file.name.split(".").pop()!.toLowerCase()
+      : "jpg";
+    const path = `${Date.now()}.${extension}`;
+
+    // A) Upload to Storage
+    const { error: uploadError } = await supabase.storage
+      .from("sheets")
+      .upload(path, file);
+
+    if (uploadError) {
+      setMessage(uploadError.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // B) Public URL
+    const { data: publicUrlData } = supabase.storage
+      .from("sheets")
+      .getPublicUrl(path);
+
+    const publicUrl = publicUrlData.publicUrl;
+
+    // C) Insert row
+    const { error: insertError } = await supabase.from("sheets").insert({
       title,
       artist,
-      fileName: file?.name ?? null,
-      fileSize: file?.size ?? null,
+      image_url: publicUrl,
+      thumbnail_url: publicUrl,
+      original_filename: file.name,
     });
+    if (insertError) {
+      setMessage(insertError.message);
+      setIsSubmitting(false);
+      return;
+    }
+    setMessage("Sheet saved.");
+    setTitle("");
+    setArtist("");
+    setFile(null);
+    setIsSubmitting(false);
   }
 
   return (
@@ -82,7 +128,13 @@ export function SheetUploadForm() {
             />
           </div>
 
-          <Button type="submit">Save sheet</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Save sheet"}
+          </Button>
+
+          {message && (
+            <p className="text-sm text-muted-foreground">{message}</p>
+          )}
         </form>
       </CardContent>
     </Card>

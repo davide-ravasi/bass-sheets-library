@@ -14,11 +14,16 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 **Progress:**
 - TAPPA 1 done (Next.js + TS + Tailwind on GitHub).
 - TAPPA 2 done (shadcn + layout + upload placeholder) — merged to `main` via PR #1.
-- TAPPA 3 in progress (Supabase):
-  - Step 1 done — Supabase project `bass-sheet-library` created (eu-west-1, free).
-  - Step 2 done — `.env.local` with `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (anon key is legacy; use publishable).
-  - Step 3 done — packages installed; `lib/supabase/client.ts` + `server.ts`; `.env.example` committed-ready; `.gitignore` allows `!.env.example` while ignoring `.env.local`. Auth/middleware later. Skip Prisma.
-  - **Next:** explain client/server scripts if asked; then Step 4 — SQL table `sheets` + Storage bucket.
+- TAPPA 3 done (Supabase foundation):
+  - Project `bass-sheet-library` (eu-west-1); `.env.local` with URL + Publishable key.
+  - `lib/supabase/client.ts` + `server.ts`; `.env.example` + gitignore exception.
+  - Table `sheets` + indexes (FTS `english`) + RLS on + anon CRUD policies.
+  - Storage bucket `sheets` (public) + storage.objects policies (anon INSERT/UPDATE/SELECT).
+  - Auth/middleware later. Skip Prisma.
+- TAPPA 4 in progress (upload):
+  - Step 1 done — Storage policies for bucket `sheets`.
+  - Step 2 mostly done — minimal Client upload form: title/artist/file → Storage + insert `sheets`. Fixed env URL (must be bare `https://….supabase.co`, no `/rest/v1`). Safe storage path without raw `file.name`.
+  - **Next small steps (piece-by-piece DIY):** reset file input after success; optional preview; home list from DB (or more form fields). No dropzone/RHF/zod yet unless asked.
 - Stack DB decision: Supabase (for included image storage), not Mongo.
 
 ## Pedagogical workflow (mandatory)
