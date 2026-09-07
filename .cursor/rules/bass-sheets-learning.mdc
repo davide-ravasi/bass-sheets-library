@@ -11,20 +11,25 @@ Side project: personal bass sheet catalog. Work little by little. Prefer Italian
 
 Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe.
 
-**Progress:**
-- TAPPA 1 done (Next.js + TS + Tailwind on GitHub).
-- TAPPA 2 done (shadcn + layout + upload placeholder) — merged to `main` via PR #1.
-- TAPPA 3 done (Supabase foundation):
-  - Project `bass-sheet-library` (eu-west-1); `.env.local` with URL + Publishable key.
-  - `lib/supabase/client.ts` + `server.ts`; `.env.example` + gitignore exception.
-  - Table `sheets` + indexes (FTS `english`) + RLS on + anon CRUD policies.
-  - Storage bucket `sheets` (public) + storage.objects policies (anon INSERT/UPDATE/SELECT).
-  - Auth/middleware later. Skip Prisma.
-- TAPPA 4 in progress (upload):
-  - Step 1 done — Storage policies for bucket `sheets`.
-  - Step 2 mostly done — minimal Client upload form: title/artist/file → Storage + insert `sheets`. Fixed env URL (must be bare `https://….supabase.co`, no `/rest/v1`). Safe storage path without raw `file.name`.
-  - **Next small steps (piece-by-piece DIY):** reset file input after success; optional preview; home list from DB (or more form fields). No dropzone/RHF/zod yet unless asked.
-- Stack DB decision: Supabase (for included image storage), not Mongo.
+**Progress (updated 2026-09-04):**
+- TAPPA 1 done — Next.js + TS + Tailwind on GitHub.
+- TAPPA 2 done — shadcn (Base UI + Nova) + layout + upload placeholder; merged via PR #1.
+- TAPPA 3 done — Supabase foundation:
+  - Project `bass-sheet-library` (eu-west-1, free).
+  - `.env.local`: `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (anon key is legacy).
+  - **Critical:** URL must be bare `https://PROJECT.supabase.co` — never `/rest/v1` or trailing slash.
+  - `lib/supabase/client.ts` (browser) + `server.ts` (Server Components); `.env.example` + `!.env.example` in gitignore.
+  - Table `sheets` + indexes; FTS with `english`; RLS on; anon CRUD policies.
+  - Storage bucket `sheets` (public) + `storage.objects` policies (anon INSERT/UPDATE/SELECT).
+  - Skip Prisma; Auth/middleware later.
+- TAPPA 4 in progress — upload (branch `feat/add-sheet-upload-form`):
+  - Form UI: `components/upload/sheet-upload-form.tsx` + `app/upload/page.tsx`.
+  - End-to-end works: upload to Storage + insert into `sheets` (verified in Dashboard).
+  - Safe storage path: `${Date.now()}.${ext}` — do not use raw `file.name` in path (spaces/apostrophes break URLs); keep real name in `original_filename`.
+  - `image_url` and `thumbnail_url` both set to the same public URL for now.
+- Stack: Supabase (DB + image storage), not Mongo.
+
+**Next session (user request):** start with a **review** of what we built (concepts + code walkthrough), then continue piece-by-piece. Possible follow-ups after review: file input reset, image preview, home list from DB, more metadata fields, commit/PR if needed.
 
 ## Pedagogical workflow (mandatory)
 
@@ -32,12 +37,12 @@ For every step:
 
 1. **Explain** what/why/commands/files — do NOT run yet
 2. **Wait** for explicit OK (`ok`, `procedi`)
-3. **Execute** only that step
+3. **Execute** only that step (or give DIY instructions if user prefers)
 4. **Stop** and summarize; propose the next step and wait again
 
 Never batch multiple implementation steps. Never skip ahead to later tappe unless asked.
 
-User controls pace: pause, skip explanations, ask for more detail, or change approach — always allowed.
+User controls pace: pause, skip explanations, ask for more detail, or change approach — always allowed. Prefer DIY with instructions when asked.
 
 ## Communication
 
@@ -47,7 +52,7 @@ User controls pace: pause, skip explanations, ask for more detail, or change app
 
 ## Stack (planned)
 
-Next.js App Router, TypeScript, Tailwind, shadcn/ui, Supabase, Vercel. Free-tier only. Private personal use.
+Next.js App Router, TypeScript, Tailwind, shadcn/ui (Base UI + Tailwind; components copied into `components/ui`), Supabase, Vercel. Free-tier only. Private personal use. UI copy currently in English.
 
 ## Knowledge capture (cerebro)
 
@@ -58,3 +63,11 @@ Do **not** use Obsidian for this project. Persist lasting concepts in the **cere
 - Only write notes when the user asks (e.g. "salva in cerebro…")
 - Prefer atomic notes under `docs/concepts/` (e.g. `web/`, or a `nextjs/` domain as needed); link from maps when useful
 - Learning-mode skills live in cerebro (`.cursor/skills/`); invoke only if the user asks to study a concept that way
+
+## Concepts worth reviewing next time
+
+- Server vs Client Components; why two Supabase clients
+- shadcn = copied source in repo, not opaque npm UI package
+- RLS + policies (table + storage)
+- Storage path vs `original_filename`; public URL
+- Env URL shape pitfall (`/rest/v1`)
