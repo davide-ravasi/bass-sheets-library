@@ -11,9 +11,9 @@ Side project: personal bass sheet catalog. Work little by little. Prefer Italian
 
 Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe.
 
-**Progress (updated 2026-09-04):**
+**Progress (updated 2026-09-08):**
 - TAPPA 1 done — Next.js + TS + Tailwind on GitHub.
-- TAPPA 2 done — shadcn (Base UI + Nova) + layout + upload placeholder; merged via PR #1.
+- TAPPA 2 done — shadcn (Base UI + Nova) + layout; merged via PR #1.
 - TAPPA 3 done — Supabase foundation:
   - Project `bass-sheet-library` (eu-west-1, free).
   - `.env.local`: `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (anon key is legacy).
@@ -22,14 +22,29 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
   - Table `sheets` + indexes; FTS with `english`; RLS on; anon CRUD policies.
   - Storage bucket `sheets` (public) + `storage.objects` policies (anon INSERT/UPDATE/SELECT).
   - Skip Prisma; Auth/middleware later.
-- TAPPA 4 in progress — upload (branch `feat/add-sheet-upload-form`):
-  - Form UI: `components/upload/sheet-upload-form.tsx` + `app/upload/page.tsx`.
-  - End-to-end works: upload to Storage + insert into `sheets` (verified in Dashboard).
-  - Safe storage path: `${Date.now()}.${ext}` — do not use raw `file.name` in path (spaces/apostrophes break URLs); keep real name in `original_filename`.
-  - `image_url` and `thumbnail_url` both set to the same public URL for now.
+- TAPPA 4 done (upload) — merged via PR #2 (`feat/add-sheet-upload-form`):
+  - `components/upload/sheet-upload-form.tsx` + `app/upload/page.tsx`.
+  - Upload to Storage + insert into `sheets`.
+  - Safe storage path: `${Date.now()}.${ext}`; real name in `original_filename`.
+  - `image_url` / `thumbnail_url` same public URL for now.
+- TAPPA 5 started (listing) — merged via PR #3 (`feat/add-listing-homepage`):
+  - Home is async Server Component: `createClient` from `server.ts`, `select` + order by `created_at`.
+  - Card grid (title, artist, `<img className="w-full h-auto">`); empty state; early return on query error.
+  - DIY tutorial style (user implements; agent explains step-by-step). No `next/image` yet.
 - Stack: Supabase (DB + image storage), not Mongo.
+- **AI/OCR metadata extract:** feasible as assisted suggest + human confirm later (TAPPA 7-ish); MVP does **not** depend on perfect auto-fill.
 
-**Next session (user request):** start with a **review** of what we built (concepts + code walkthrough), then continue piece-by-piece. Possible follow-ups after review: file input reset, image preview, home list from DB, more metadata fields, commit/PR if needed.
+**Next session:** piece-by-piece DIY. Possible follow-ups: file input reset, image preview on upload, more metadata fields, detail page, `next/image` + remotePatterns, search/filters, commit rule file if still dirty.
+
+## Review notes (2026-09-07)
+
+Review done: architecture map, upload walkthrough, Server vs Client, shadcn, RLS/storage, env URL pitfall.
+
+**User check — clarified:**
+- Storage path = object key in bucket; `original_filename` = browser `File.name` (not a full local disk path).
+- `/rest/v1` in env doubles API paths (client already appends them) → invalid URL error.
+- `"use client"` on the whole upload *page* would still allow upload (page becomes Client); we split Server page + Client form to keep Client only where needed.
+- Home list from DB → Server Component + `lib/supabase/server.ts` (done 2026-09-08).
 
 ## Pedagogical workflow (mandatory)
 
@@ -37,12 +52,13 @@ For every step:
 
 1. **Explain** what/why/commands/files — do NOT run yet
 2. **Wait** for explicit OK (`ok`, `procedi`)
-3. **Execute** only that step (or give DIY instructions if user prefers)
+3. **Execute** only that step **or give DIY instructions** (user often prefers DIY tutorial)
 4. **Stop** and summarize; propose the next step and wait again
 
 Never batch multiple implementation steps. Never skip ahead to later tappe unless asked.
+**Do not implement DIY steps for the user unless they explicitly ask you to write the code.**
 
-User controls pace: pause, skip explanations, ask for more detail, or change approach — always allowed. Prefer DIY with instructions when asked.
+User controls pace: pause, skip explanations, ask for more detail, or change approach — always allowed.
 
 ## Communication
 
@@ -66,7 +82,7 @@ Do **not** use Obsidian for this project. Persist lasting concepts in the **cere
 
 ## Concepts worth reviewing next time
 
-- Server vs Client Components; why two Supabase clients
+- Server vs Client Components; why two Supabase clients (reviewed; home list practiced)
 - shadcn = copied source in repo, not opaque npm UI package
 - RLS + policies (table + storage)
 - Storage path vs `original_filename`; public URL
