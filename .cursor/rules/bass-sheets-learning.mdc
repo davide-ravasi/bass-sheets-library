@@ -31,6 +31,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
   - Home is async Server Component: `createClient` from `server.ts`, `select` + order by `created_at`.
   - Card grid (title, artist, `<img className="w-full h-auto">`); empty state; early return on query error.
   - DIY tutorial style (user implements; agent explains step-by-step). No `next/image` yet.
+- UI: Plus Jakarta Sans via `next/font/google` (`--font-sans`); mono kept separately (Geist Mono or user-chosen).
 - Stack: Supabase (DB + image storage), not Mongo.
 - **AI/OCR metadata extract:** feasible as assisted suggest + human confirm later (TAPPA 7-ish); MVP does **not** depend on perfect auto-fill.
 
