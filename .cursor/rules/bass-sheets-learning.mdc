@@ -28,16 +28,16 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
   - Safe storage path: `${Date.now()}.${ext}`; real name in `original_filename`.
   - `image_url` / `thumbnail_url` same public URL for now.
   - **Deferred polish (do later, not blocking):** file input reset after success; image preview before save; more metadata fields (tempo, key, techniques, status…); optionally dropzone / zod / RHF from brainstorming.
-- TAPPA 5 in progress (listing + detail):
-  - Home listing merged via PR #3 — Card grid, empty state, error early return; plain `<img>`.
-  - Detail DIY (2026-09-11): `app/sheets/[id]/page.tsx` — Server Component + `server.ts` + `.eq("id").single()`; home cards link to `/sheets/${id}`. Learned: avoid `"use client"`/`useParams`/`await` mix for read-only pages.
-  - Still optional later: show `image_url` on detail, polish UI, zoom/prev-next, `next/image`.
+- TAPPA 5 mostly done (listing + detail):
+  - Home listing merged via PR #3 — Card grid; cards link to detail; hover/focus.
+  - Detail merged via PR (feat/sheet-detail-page): `app/sheets/[id]/page.tsx` — Server + `server.ts` + `.single()`; `h1` + artist/date + `image_url`; no duplicate CardTitle.
+  - Optional later: zoom/prev-next, `next/image`, more fields on detail.
 - UI font: Plus Jakarta Sans (`--font-sans`); mono separate.
 - Stack: Supabase (DB + image storage), not Mongo.
 - **AI/OCR:** assisted suggest + human confirm later; MVP does not depend on it.
 - Follow plan order from `docs/PROJECT_BRAINSTORMING.md` (tappe), MVP-first.
 
-**Next session:** polish detail (e.g. full image), or TAPPA 4 deferred polish, or commit/PR for sheets detail branch if not on main yet.
+**Next session:** TAPPA 4 deferred polish (file input reset, preview, more metadata), or TAPPA 5 leftovers (zoom/nav), or TAPPA 6 search/filters. DIY tutorial style.
 
 ## Review notes (2026-09-07)
 
