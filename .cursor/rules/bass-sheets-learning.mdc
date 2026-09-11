@@ -11,7 +11,7 @@ Side project: personal bass sheet catalog. Work little by little. Prefer Italian
 
 Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe.
 
-**Progress (updated 2026-09-08):**
+**Progress (updated 2026-09-09):**
 - TAPPA 1 done — Next.js + TS + Tailwind on GitHub.
 - TAPPA 2 done — shadcn (Base UI + Nova) + layout; merged via PR #1.
 - TAPPA 3 done — Supabase foundation:
@@ -22,20 +22,22 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
   - Table `sheets` + indexes; FTS with `english`; RLS on; anon CRUD policies.
   - Storage bucket `sheets` (public) + `storage.objects` policies (anon INSERT/UPDATE/SELECT).
   - Skip Prisma; Auth/middleware later.
-- TAPPA 4 done (upload) — merged via PR #2 (`feat/add-sheet-upload-form`):
+- TAPPA 4 done as **MVP** (upload) — merged via PR #2:
   - `components/upload/sheet-upload-form.tsx` + `app/upload/page.tsx`.
   - Upload to Storage + insert into `sheets`.
   - Safe storage path: `${Date.now()}.${ext}`; real name in `original_filename`.
   - `image_url` / `thumbnail_url` same public URL for now.
-- TAPPA 5 started (listing) — merged via PR #3 (`feat/add-listing-homepage`):
-  - Home is async Server Component: `createClient` from `server.ts`, `select` + order by `created_at`.
-  - Card grid (title, artist, `<img className="w-full h-auto">`); empty state; early return on query error.
-  - DIY tutorial style (user implements; agent explains step-by-step). No `next/image` yet.
-- UI: Plus Jakarta Sans via `next/font/google` (`--font-sans`); mono kept separately (Geist Mono or user-chosen).
+  - **Deferred polish (do later, not blocking):** file input reset after success; image preview before save; more metadata fields (tempo, key, techniques, status…); optionally dropzone / zod / RHF from brainstorming.
+- TAPPA 5 in progress (listing + detail):
+  - Home listing merged via PR #3 — Card grid, empty state, error early return; plain `<img>`.
+  - Detail DIY (2026-09-11): `app/sheets/[id]/page.tsx` — Server Component + `server.ts` + `.eq("id").single()`; home cards link to `/sheets/${id}`. Learned: avoid `"use client"`/`useParams`/`await` mix for read-only pages.
+  - Still optional later: show `image_url` on detail, polish UI, zoom/prev-next, `next/image`.
+- UI font: Plus Jakarta Sans (`--font-sans`); mono separate.
 - Stack: Supabase (DB + image storage), not Mongo.
-- **AI/OCR metadata extract:** feasible as assisted suggest + human confirm later (TAPPA 7-ish); MVP does **not** depend on perfect auto-fill.
+- **AI/OCR:** assisted suggest + human confirm later; MVP does not depend on it.
+- Follow plan order from `docs/PROJECT_BRAINSTORMING.md` (tappe), MVP-first.
 
-**Next session:** piece-by-piece DIY. Possible follow-ups: file input reset, image preview on upload, more metadata fields, detail page, `next/image` + remotePatterns, search/filters, commit rule file if still dirty.
+**Next session:** polish detail (e.g. full image), or TAPPA 4 deferred polish, or commit/PR for sheets detail branch if not on main yet.
 
 ## Review notes (2026-09-07)
 
