@@ -28,19 +28,25 @@ export default async function Home() {
       {sheets && sheets.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sheets.map((sheet) => (
-            <Card key={sheet.id}>
-              <CardHeader>
-                <CardTitle>{sheet.title}</CardTitle>
-                <CardDescription>{sheet.artist}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <img
-                  src={sheet.thumbnail_url}
-                  alt={sheet.title}
-                  className="w-full h-auto"
-                />
-              </CardContent>
-            </Card>
+            <Link
+              href={`/sheets/${sheet.id}`}
+              key={sheet.id}
+              className="focus-visible:ring"
+            >
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <CardTitle>{sheet.title}</CardTitle>
+                  <CardDescription>{sheet.artist}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <img
+                    src={sheet.thumbnail_url}
+                    alt={sheet.title}
+                    className="w-full h-auto"
+                  />
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       ) : (
