@@ -28,6 +28,14 @@ export default async function SheetPage({
   return (
     <div className="space-y-6">
       <div className="space-y-1">
+        <p>
+          <Link
+            href="/"
+            className="text-sm text-primary underline underline-offset-4"
+          >
+            Back to catalog
+          </Link>
+        </p>
         <h1 className="text-2xl font-semibold tracking-tight">{sheet.title}</h1>
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,12 +16,27 @@ export function SheetUploadForm() {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileInputKey, setFileInputKey] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [file]);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // Pezzo 2: upload to Storage + insert into sheets
     if (!file) {
       return;
     }
@@ -35,7 +50,6 @@ export function SheetUploadForm() {
       : "jpg";
     const path = `${Date.now()}.${extension}`;
 
-    // A) Upload to Storage
     const { error: uploadError } = await supabase.storage
       .from("sheets")
       .upload(path, file);
@@ -46,14 +60,12 @@ export function SheetUploadForm() {
       return;
     }
 
-    // B) Public URL
     const { data: publicUrlData } = supabase.storage
       .from("sheets")
       .getPublicUrl(path);
 
     const publicUrl = publicUrlData.publicUrl;
 
-    // C) Insert row
     const { error: insertError } = await supabase.from("sheets").insert({
       title,
       artist,
@@ -61,15 +73,18 @@ export function SheetUploadForm() {
       thumbnail_url: publicUrl,
       original_filename: file.name,
     });
+
     if (insertError) {
       setMessage(insertError.message);
       setIsSubmitting(false);
       return;
     }
+
     setMessage("Sheet saved.");
     setTitle("");
     setArtist("");
     setFile(null);
+    setFileInputKey((key) => key + 1);
     setIsSubmitting(false);
   }
 
@@ -116,6 +131,7 @@ export function SheetUploadForm() {
               Sheet image
             </label>
             <Input
+              key={fileInputKey}
               id="file"
               name="file"
               type="file"
@@ -126,6 +142,16 @@ export function SheetUploadForm() {
                 setFile(nextFile);
               }}
             />
+            {previewUrl && file && (
+              <div className="flex flex-col items-center gap-2">
+                <img
+                  src={previewUrl}
+                  alt={file.name}
+                  className="max-h-80 w-auto rounded-md"
+                />
+                <p className="text-sm text-muted-foreground">{file.name}</p>
+              </div>
+            )}
           </div>
 
           <Button type="submit" disabled={isSubmitting}>
