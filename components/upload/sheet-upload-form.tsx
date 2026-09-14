@@ -15,6 +15,7 @@ import { createClient } from "@/lib/supabase/client";
 export function SheetUploadForm() {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
+  const [tempo, setTempo] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
@@ -69,6 +70,7 @@ export function SheetUploadForm() {
     const { error: insertError } = await supabase.from("sheets").insert({
       title,
       artist,
+      tempo: tempo === "" ? null : parseInt(tempo, 10),
       image_url: publicUrl,
       thumbnail_url: publicUrl,
       original_filename: file.name,
@@ -83,6 +85,7 @@ export function SheetUploadForm() {
     setMessage("Sheet saved.");
     setTitle("");
     setArtist("");
+    setTempo("");
     setFile(null);
     setFileInputKey((key) => key + 1);
     setIsSubmitting(false);
@@ -123,6 +126,20 @@ export function SheetUploadForm() {
               onChange={(event) => setArtist(event.target.value)}
               placeholder="Queen"
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="tempo" className="text-sm font-medium">
+              Tempo
+            </label>
+            <Input
+              id="tempo"
+              type="number"
+              name="tempo"
+              value={tempo}
+              onChange={(event) => setTempo(event.target.value)}
+              placeholder="120"
             />
           </div>
 

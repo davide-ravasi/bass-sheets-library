@@ -27,7 +27,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
   - Upload to Storage + insert into `sheets`.
   - Safe storage path: `${Date.now()}.${ext}`; real name in `original_filename`.
   - `image_url` / `thumbnail_url` same public URL for now.
-  - **Deferred polish (do later, not blocking):** file input reset after success; image preview before save; more metadata fields (tempo, key, techniques, status…); optionally dropzone / zod / RHF from brainstorming.
+  - **Deferred polish (partially done 2026-09-14 on main `24f0309`):** file input reset (`fileInputKey`), preview with object URL + revoke + `<img>`, Back to catalog outside `h1`. Still open: more metadata fields (tempo, key, techniques, status…); optionally dropzone / zod / RHF.
 - TAPPA 5 mostly done (listing + detail):
   - Home listing merged via PR #3 — Card grid; cards link to detail; hover/focus.
   - Detail merged via PR (feat/sheet-detail-page): `app/sheets/[id]/page.tsx` — Server + `server.ts` + `.single()`; `h1` + artist/date + `image_url`; no duplicate CardTitle.
@@ -37,7 +37,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 - **AI/OCR:** assisted suggest + human confirm later; MVP does not depend on it.
 - Follow plan order from `docs/PROJECT_BRAINSTORMING.md` (tappe), MVP-first.
 
-**Next session:** TAPPA 4 deferred polish (file input reset, preview, more metadata), or TAPPA 5 leftovers (zoom/nav), or TAPPA 6 search/filters. DIY tutorial style.
+**Next session:** add a metadata field (e.g. tempo/status) DIY; or TAPPA 6 search/filters; or zoom on detail. DIY tutorial style.
 
 ## Review notes (2026-09-07)
 

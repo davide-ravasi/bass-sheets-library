@@ -17,7 +17,7 @@ export default async function SheetPage({
   const supabase = await createClient();
   const { data: sheet, error } = await supabase
     .from("sheets")
-    .select("id, title, artist, image_url, created_at")
+    .select("id, title, artist, tempo, image_url, created_at")
     .eq("id", id)
     .single();
 
@@ -44,8 +44,8 @@ export default async function SheetPage({
           <Card>
             <CardHeader>
               <CardDescription>
-                {sheet.artist} -{" "}
-                {new Date(sheet.created_at).toLocaleDateString()}
+                {sheet.artist} - {new Date(sheet.created_at).toLocaleDateString()}
+                {sheet.tempo != null ? ` - ${sheet.tempo} BPM` : ""}
               </CardDescription>
             </CardHeader>
             <CardContent>
