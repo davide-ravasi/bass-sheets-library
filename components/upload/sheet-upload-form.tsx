@@ -11,11 +11,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectLabel,
+  SelectGroup,
+} from "@/components/ui/select";
 
 export function SheetUploadForm() {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [tempo, setTempo] = useState("");
+  const [status, setStatus] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
@@ -71,6 +81,7 @@ export function SheetUploadForm() {
       title,
       artist,
       tempo: tempo === "" ? null : parseInt(tempo, 10),
+      status: status === "" ? null : status,
       image_url: publicUrl,
       thumbnail_url: publicUrl,
       original_filename: file.name,
@@ -90,6 +101,12 @@ export function SheetUploadForm() {
     setFileInputKey((key) => key + 1);
     setIsSubmitting(false);
   }
+
+  const statusOptions = [
+    { label: "To learn", value: "to-learn" },
+    { label: "Practicing", value: "practicing" },
+    { label: "Mastered", value: "mastered" },
+  ];
 
   return (
     <Card>
@@ -141,6 +158,30 @@ export function SheetUploadForm() {
               onChange={(event) => setTempo(event.target.value)}
               placeholder="120"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Select
+              items={statusOptions}
+              value={status}
+              onValueChange={(value: string | null) =>
+                setStatus(value ?? "to-learn")
+              }
+            >
+              <SelectTrigger className="w-full max-w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select a status</SelectLabel>
+                  {statusOptions.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
