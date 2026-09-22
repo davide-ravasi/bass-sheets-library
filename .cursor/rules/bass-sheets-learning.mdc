@@ -11,6 +11,8 @@ Side project: personal bass sheet catalog. Work little by little. Prefer Italian
 
 Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe.
 
+**Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
+
 **Progress (updated 2026-09-16):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
 - TAPPA 4 MVP + polish: upload form with preview, file input reset (`fileInputKey`), tempo (+ null/`parseInt`), status Select (values must match DB CHECK: `to-learn` | `practicing` | `mastered`).
