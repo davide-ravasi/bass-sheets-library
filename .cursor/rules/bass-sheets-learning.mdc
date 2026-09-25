@@ -13,17 +13,16 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 **Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
 
-**Progress (updated 2026-09-22):**
+**Progress (updated 2026-09-25):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
-- TAPPA 4: upload with preview, `fileInputKey`, tempo/status + more metadata (composer, genre as comma→`TEXT[]`, key, time_signature, difficulty, notation_type). Form grouped (Identity / Music / Practice / Classification / File); only title, artist, file required; empty → null; Select values match CHECKs.
-- TAPPA 5: home grid + detail `/sheets/[id]` on main — two-column sticky aside, status Badge, music MetaChips (key/time/BPM/level/notation), genre chips, conditional nulls; `genre` via array map (not raw React array dump).
-- Docs: `docs/DATABASE_SCHEMA.md` (columns, CHECKs, indexes, RLS, inspect SQL).
-- UI: Plus Jakarta Sans; per-status Badge colors still TODO (user deciding).
-- Still not in UI: `techniques`, `tags`, `notes` (and OCR `extracted_text`).
+- TAPPA 4: upload with preview, `fileInputKey`, full metadata form (Identity / Music / Practice / Classification / Notes / File). Required: title, artist, file. Empty → null. Arrays via comma-split (`genre`, `techniques`, `tags`). Select values match CHECKs (`status`, `difficulty`, `notation_type`).
+- TAPPA 5: home grid + detail `/sheets/[id]` — sticky aside, status Badge, music MetaChips, genre/techniques/tags chips, notes block, conditional nulls.
+- Docs: `docs/DATABASE_SCHEMA.md`.
+- UI: Plus Jakarta Sans; status Badge colors: mauve / amber / teal (`to-learn` / `practicing` / `mastered`) + muted fallback.
+- Not in UI yet: OCR `extracted_text` (later).
 
 **Next session:**
-- Optional: remaining fields (`techniques`, `tags`, `notes`) and/or per-status Badge colors.
-- Or TAPPA 6: search/filters / zoom. DIY tutorial style.
+- TAPPA 6: search/filters / zoom. DIY tutorial style.
 
 ## Review notes (2026-09-07)
 

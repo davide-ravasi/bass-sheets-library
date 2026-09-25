@@ -16,6 +16,18 @@ const statusLabels: Record<string, string> = {
   mastered: "Mastered",
 };
 
+const statusStyle: Record<string, string> = {
+  "to-learn":
+    "border-mauve-200 bg-mauve-100 text-mauve-800 dark:border-mauve-800 dark:bg-mauve-950 dark:text-mauve-200",
+  practicing:
+    "border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200",
+  mastered:
+    "border-teal-200 bg-teal-100 text-teal-800 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-200",
+};
+
+const statusStyleFallback =
+  "border-border bg-muted text-muted-foreground";
+
 const notationLabels: Record<string, string> = {
   standard: "Standard",
   tab: "Tab",
@@ -134,7 +146,12 @@ export default async function SheetPage({
           {(statusLabel || musicMeta.length > 0) && (
             <div className="flex flex-wrap items-center gap-2">
               {statusLabel && (
-                <Badge className="border-violet-200 bg-violet-100 text-violet-800 dark:border-violet-800 dark:bg-violet-950 dark:text-violet-200">
+                <Badge
+                  className={
+                    (sheet.status && statusStyle[sheet.status]) ||
+                    statusStyleFallback
+                  }
+                >
                   {statusLabel}
                 </Badge>
               )}
