@@ -26,6 +26,9 @@ export function SheetUploadForm() {
   const [artist, setArtist] = useState("");
   const [composer, setComposer] = useState("");
   const [genre, setGenre] = useState("");
+  const [techniques, setTechniques] = useState("");
+  const [tags, setTags] = useState("");
+  const [notes, setNotes] = useState("");
   const [key, setKey] = useState("");
   const [timeSignature, setTimeSignature] = useState("");
   const [tempo, setTempo] = useState("");
@@ -88,6 +91,16 @@ export function SheetUploadForm() {
       .map((item) => item.trim())
       .filter(Boolean);
 
+    const techniquesArray = techniques
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    const tagsArray = tags
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
     const { error: insertError } = await supabase.from("sheets").insert({
       title,
       artist,
@@ -95,10 +108,13 @@ export function SheetUploadForm() {
       difficulty: difficulty === "" ? null : parseInt(difficulty, 10),
       notation_type: notationType === "" ? null : notationType,
       genre: genreArray.length === 0 ? null : genreArray,
+      techniques: techniquesArray.length === 0 ? null : techniquesArray,
+      tags: tagsArray.length === 0 ? null : tagsArray,
       key: key === "" ? null : key,
       time_signature: timeSignature === "" ? null : timeSignature,
       composer: composer === "" ? null : composer,
       status: status === "" ? null : status,
+      notes: notes === "" ? null : notes,
       image_url: publicUrl,
       thumbnail_url: publicUrl,
       original_filename: file.name,
@@ -115,6 +131,9 @@ export function SheetUploadForm() {
     setArtist("");
     setComposer("");
     setGenre("");
+    setTechniques("");
+    setTags("");
+    setNotes("");
     setKey("");
     setTimeSignature("");
     setTempo("");
@@ -345,6 +364,54 @@ export function SheetUploadForm() {
               <p className="text-xs text-muted-foreground">
                 Separate multiple genres with commas.
               </p>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="techniques" className="text-sm font-medium">
+                Techniques
+              </label>
+              <Input
+                id="techniques"
+                name="techniques"
+                value={techniques}
+                onChange={(event) => setTechniques(event.target.value)}
+                placeholder="Slap, chords, harmonics"
+              />
+              <p className="text-xs text-muted-foreground">
+                Separate multiple techniques with commas.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="tags" className="text-sm font-medium">
+                Tags
+              </label>
+              <Input
+                id="tags"
+                name="tags"
+                value={tags}
+                onChange={(event) => setTags(event.target.value)}
+                placeholder="intro-only, slow-build"
+              />
+              <p className="text-xs text-muted-foreground">
+                Free labels, comma-separated.
+              </p>
+            </div>
+          </fieldset>
+
+          <fieldset className="space-y-4">
+            <legend className="text-sm font-medium">Notes</legend>
+            <div className="space-y-2">
+              <label htmlFor="notes" className="text-sm font-medium">
+                Practice notes
+              </label>
+              <textarea
+                id="notes"
+                name="notes"
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                placeholder="Bar 8: watch the ghost notes…"
+                rows={4}
+                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-2 text-base outline-none transition-colors focus-visible:ring-3 md:text-sm"
+              />
             </div>
           </fieldset>
 

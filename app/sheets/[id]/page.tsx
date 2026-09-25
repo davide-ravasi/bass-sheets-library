@@ -41,7 +41,7 @@ export default async function SheetPage({
   const { data: sheet, error } = await supabase
     .from("sheets")
     .select(
-      "id, title, artist, composer, genre, key, time_signature, tempo, difficulty, notation_type, status, image_url, created_at",
+      "id, title, artist, composer, genre, techniques, tags, notes, key, time_signature, tempo, difficulty, notation_type, status, image_url, created_at",
     )
     .eq("id", id)
     .single();
@@ -91,9 +91,12 @@ export default async function SheetPage({
   const notationLabel = sheet.notation_type
     ? (notationLabels[sheet.notation_type] ?? sheet.notation_type)
     : null;
-  const genres = Array.isArray(sheet.genre)
-    ? sheet.genre.filter(Boolean)
+  const genres = Array.isArray(sheet.genre) ? sheet.genre.filter(Boolean) : [];
+
+  const techniques = Array.isArray(sheet.techniques)
+    ? sheet.techniques.filter(Boolean)
     : [];
+  const tags = Array.isArray(sheet.tags) ? sheet.tags.filter(Boolean) : [];
 
   const musicMeta = [
     sheet.key ? `Key ${sheet.key}` : null,
@@ -151,6 +154,43 @@ export default async function SheetPage({
                   <MetaChip key={g}>{g}</MetaChip>
                 ))}
               </div>
+            </div>
+          )}
+
+          {techniques.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Techniques
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {techniques.map((t) => (
+                  <MetaChip key={t}>{t}</MetaChip>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {tags.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Tags
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((t) => (
+                  <MetaChip key={t}>{t}</MetaChip>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sheet.notes && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Notes
+              </p>
+              <p className="text-sm whitespace-pre-wrap text-muted-foreground">
+                {sheet.notes}
+              </p>
             </div>
           )}
 

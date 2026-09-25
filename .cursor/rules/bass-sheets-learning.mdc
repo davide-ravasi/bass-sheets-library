@@ -13,17 +13,17 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 **Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
 
-**Progress (updated 2026-09-16):**
+**Progress (updated 2026-09-22):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
-- TAPPA 4 MVP + polish: upload form with preview, file input reset (`fileInputKey`), tempo (+ null/`parseInt`), status Select (values must match DB CHECK: `to-learn` | `practicing` | `mastered`).
-- TAPPA 5 mostly done: home grid + detail `/sheets/[id]`; detail layout polish (two-column desktop, sticky meta, violet status Badge) may be local/WIP — commit when happy.
-- UI: Plus Jakarta Sans; Badge colors per status still TODO (user deciding).
-- Note: Supabase UI often hides CHECK constraints; use SQL on `pg_constraint` to inspect (`sheets_status_check`, etc.).
+- TAPPA 4: upload with preview, `fileInputKey`, tempo/status + more metadata (composer, genre as comma→`TEXT[]`, key, time_signature, difficulty, notation_type). Form grouped (Identity / Music / Practice / Classification / File); only title, artist, file required; empty → null; Select values match CHECKs.
+- TAPPA 5: home grid + detail `/sheets/[id]` on main — two-column sticky aside, status Badge, music MetaChips (key/time/BPM/level/notation), genre chips, conditional nulls; `genre` via array map (not raw React array dump).
+- Docs: `docs/DATABASE_SCHEMA.md` (columns, CHECKs, indexes, RLS, inspect SQL).
+- UI: Plus Jakarta Sans; per-status Badge colors still TODO (user deciding).
+- Still not in UI: `techniques`, `tags`, `notes` (and OCR `extracted_text`).
 
 **Next session:**
-- Finish/commit status + detail layout if not on main yet.
-- Per-status Badge colors (optional).
-- Or TAPPA 6 search/filters / zoom. DIY tutorial style.
+- Optional: remaining fields (`techniques`, `tags`, `notes`) and/or per-status Badge colors.
+- Or TAPPA 6: search/filters / zoom. DIY tutorial style.
 
 ## Review notes (2026-09-07)
 
