@@ -13,16 +13,19 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 **Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
 
-**Progress (updated 2026-09-25):**
+**Progress (updated 2026-09-30):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
 - TAPPA 4: upload with preview, `fileInputKey`, full metadata form (Identity / Music / Practice / Classification / Notes / File). Required: title, artist, file. Empty → null. Arrays via comma-split (`genre`, `techniques`, `tags`). Select values match CHECKs (`status`, `difficulty`, `notation_type`).
 - TAPPA 5: home grid + detail `/sheets/[id]` — sticky aside, status Badge, music MetaChips, genre/techniques/tags chips, notes block, conditional nulls.
 - Docs: `docs/DATABASE_SCHEMA.md`.
 - UI: Plus Jakarta Sans; status Badge colors: mauve / amber / teal (`to-learn` / `practicing` / `mastered`) + muted fallback.
+- TAPPA 6 started: home status filter via `searchParams` + Link chips (All / three statuses), conditional `.eq`, active styles with `cn` + status colors. Learned: don't import data from `"use client"` modules into Server pages; use `Link` not `onClick`+`redirect` for filters.
+- Detail zoom MVP: `SheetImageZoom` with native `<dialog>` + Invoker Commands (`command` / `commandfor`), X close (lucide).
 - Not in UI yet: OCR `extracted_text` (later).
 
 **Next session:**
-- TAPPA 6: search/filters / zoom. DIY tutorial style.
+- TAPPA 6 cont.: text search / more filters. DIY tutorial style.
+- Todo: CI leggera (GitHub Actions: `lint` + `build`).
 
 ## Review notes (2026-09-07)
 

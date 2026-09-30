@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/server";
+import { SheetImageZoom } from "@/components/sheet/sheet-image-zoom";
 
 const statusLabels: Record<string, string> = {
   "to-learn": "To learn",
@@ -25,8 +26,7 @@ const statusStyle: Record<string, string> = {
     "border-teal-200 bg-teal-100 text-teal-800 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-200",
 };
 
-const statusStyleFallback =
-  "border-border bg-muted text-muted-foreground";
+const statusStyleFallback = "border-border bg-muted text-muted-foreground";
 
 const notationLabels: Record<string, string> = {
   standard: "Standard",
@@ -217,10 +217,10 @@ export default async function SheetPage({
         </aside>
 
         <div className="min-w-0">
-          <img
+          <SheetImageZoom
             src={sheet.image_url}
             alt={sheet.title}
-            className="w-full h-auto rounded-lg border border-border bg-muted"
+            className="h-auto w-full rounded-lg border border-border bg-muted"
           />
         </div>
       </div>
