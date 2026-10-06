@@ -13,19 +13,20 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 **Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
 
-**Progress (updated 2026-09-30):**
+**Progress (updated 2026-10-02):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
 - TAPPA 4: upload with preview, `fileInputKey`, full metadata form (Identity / Music / Practice / Classification / Notes / File). Required: title, artist, file. Empty → null. Arrays via comma-split (`genre`, `techniques`, `tags`). Select values match CHECKs (`status`, `difficulty`, `notation_type`).
 - TAPPA 5: home grid + detail `/sheets/[id]` — sticky aside, status Badge, music MetaChips, genre/techniques/tags chips, notes block, conditional nulls.
 - Docs: `docs/DATABASE_SCHEMA.md`.
 - UI: Plus Jakarta Sans; status Badge colors: mauve / amber / teal (`to-learn` / `practicing` / `mastered`) + muted fallback.
-- TAPPA 6 started: home status filter via `searchParams` + Link chips (All / three statuses), conditional `.eq`, active styles with `cn` + status colors. Learned: don't import data from `"use client"` modules into Server pages; use `Link` not `onClick`+`redirect` for filters.
+- TAPPA 6: home status filter via `searchParams` + Link chips; conditional `.eq`; active styles with `cn` + status colors. Learned: don't import data from `"use client"` modules into Server pages; use `Link` not `onClick`+`redirect`.
 - Detail zoom MVP: `SheetImageZoom` with native `<dialog>` + Invoker Commands (`command` / `commandfor`), X close (lucide).
+- TAPPA 6 search (WIP on `feat/search-input-home`): `?q=` + `.or(\`title.ilike.%q%,artist.ilike.%q%\`)` — one PostgREST filter string; AND with status. UI: form GET (or similar) so URL updates without passing callbacks from Server → Client. Learned: cannot pass functions from Server page to Client; `useRouter` only in Client; native GET form keeps `q`+`status` in URL simply.
 - Not in UI yet: OCR `extracted_text` (later).
 
 **Next session:**
-- TAPPA 6 cont.: text search / more filters. DIY tutorial style.
-- Todo: CI leggera (GitHub Actions: `lint` + `build`).
+- Code review of search UI on `feat/search-input-home` (DIY). Then polish/commit/PR if happy.
+- Optional: Deploy su Vercel + env Supabase.
 
 ## Review notes (2026-09-07)
 
