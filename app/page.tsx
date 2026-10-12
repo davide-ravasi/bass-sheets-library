@@ -77,10 +77,14 @@ export default async function Home({
           </span>
           {statusOptions.map(({ value, label }) => {
             const isActive = value === "" ? !status : status === value;
-            const href =
-              value || queryParam
-                ? `/?status=${value || ""}&q=${queryParam || ""}`
-                : "/";
+            const params = new URLSearchParams();
+            if (value) {
+              params.set("status", value);
+            }
+            if (queryParam) {
+              params.set("q", queryParam);
+            }
+            const href = params.toString() ? `/?${params.toString()}` : "/";
             const activeClass =
               value === "" ? filterAllActive : statusStyle[value];
 
@@ -95,7 +99,9 @@ export default async function Home({
             );
           })}
         </div>
-        <SearchInput searchParams={{ status: statusParam, q: queryParam }} />
+        <SearchInput
+          searchParams={{ status: statusParam || "", q: queryParam || "" }}
+        />
       </div>
 
       {sheets && sheets.length > 0 ? (
