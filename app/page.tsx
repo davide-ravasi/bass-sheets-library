@@ -99,9 +99,16 @@ export default async function Home({
             );
           })}
         </div>
-        <SearchInput
-          searchParams={{ status: statusParam || "", q: queryParam || "" }}
-        />
+
+        <SearchInput searchParams={{ status, q: queryParam }} />
+        {(status || queryParam) && (
+          <Link
+            href="/"
+            className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+          >
+            Clear filters
+          </Link>
+        )}
       </div>
 
       {sheets && sheets.length > 0 ? (
