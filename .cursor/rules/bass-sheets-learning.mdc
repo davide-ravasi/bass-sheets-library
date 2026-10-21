@@ -25,9 +25,30 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 - Search polish (2026-10-21): chip `href` via `URLSearchParams`; form GET + optional types; hidden status only if set; no `"use client"` on SearchInput; Clear search (omit `q`, keep `status`) + Clear filters → `/`.
 - Not in UI yet: OCR `extracted_text` (later).
 
-**Next session:**
-- Commit/PR `feat/search-input-home` → `main` if happy.
-- Optional: Deploy su Vercel + env Supabase.
+**Programma (aggiornato 2026-10-21) — tenere questo ordine:**
+
+*Subito*
+1. Merge PR search → `main` (user fa quando pronto; avvisa in chat).
+2. Deploy Vercel + env Supabase.
+
+*TAPPA 6 — resto filtri*
+3. Filtro difficulty (chip 1–5, stesso pattern status / URLSearchParams).
+4. Filtro genre / tags (array PostgREST).
+5. Ordinamento (newest / title / difficulty).
+6. (Opz.) Debounce search live — non urgente; GET submit ok.
+
+*Uso quotidiano*
+7. Edit sheet (metadati dopo upload).
+8. Delete sheet (+ Storage).
+9. Badge status sulle card home.
+
+*TAPPA 7 — dopo*
+10. OCR / LLM → suggerimenti campi (`extracted_text`, key stimata, ecc.).
+11. Dark mode / PWA / stats — solo se servono.
+
+*Fuori scope per ora:* CI Actions / test dedicati (basta build Vercel); Auth stretta.
+
+**Next session:** dopo merge search → punto 2 (Vercel) oppure 3 (difficulty), a scelta.
 
 ## Review notes (2026-09-07)
 
