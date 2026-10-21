@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+import { SearchInput } from "@/components/search-input/search-input";
 
 type Status = "to-learn" | "practicing" | "mastered";
 
@@ -34,9 +35,9 @@ const filterAllActive = "border-border bg-muted text-foreground";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; q?: string }>;
 }) {
-  const { status: statusParam } = await searchParams;
+  const { status: statusParam, q: queryParam } = await searchParams;
   const status =
     statusParam === "to-learn" ||
     statusParam === "practicing" ||
@@ -54,6 +55,12 @@ export default async function Home({
     query = query.eq("status", status);
   }
 
+  if (queryParam) {
+    query = query.or(
+      `title.ilike.%${queryParam}%,artist.ilike.%${queryParam}%`,
+    );
+  }
+
   const { data: sheets, error } = await query;
 
   if (error) {
@@ -65,10 +72,19 @@ export default async function Home({
       <div className="space-y-3">
         <h1 className="text-2xl font-semibold tracking-tight">Sheet catalog</h1>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Filter by status:</span>
+          <span className="text-sm text-muted-foreground">
+            Filter by status:
+          </span>
           {statusOptions.map(({ value, label }) => {
             const isActive = value === "" ? !status : status === value;
-            const href = value ? `/?status=${value}` : "/";
+            const params = new URLSearchParams();
+            if (value) {
+              params.set("status", value);
+            }
+            if (queryParam) {
+              params.set("q", queryParam);
+            }
+            const href = params.toString() ? `/?${params.toString()}` : "/";
             const activeClass =
               value === "" ? filterAllActive : statusStyle[value];
 
@@ -83,6 +99,16 @@ export default async function Home({
             );
           })}
         </div>
+
+        <SearchInput searchParams={{ status, q: queryParam }} />
+        {(status || queryParam) && (
+          <Link
+            href="/"
+            className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+          >
+            Clear filters
+          </Link>
+        )}
       </div>
 
       {sheets && sheets.length > 0 ? (
