@@ -22,11 +22,11 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 - TAPPA 6: home status filter via `searchParams` + Link chips; conditional `.eq`; active styles with `cn` + status colors. Learned: don't import data from `"use client"` modules into Server pages; use `Link` not `onClick`+`redirect`.
 - Detail zoom MVP: `SheetImageZoom` with native `<dialog>` + Invoker Commands (`command` / `commandfor`), X close (lucide).
 - TAPPA 6 search (WIP on `feat/search-input-home`): `?q=` + `.or(\`title.ilike.%q%,artist.ilike.%q%\`)` — one PostgREST filter string; AND with status. UI: form GET (or similar) so URL updates without passing callbacks from Server → Client. Learned: cannot pass functions from Server page to Client; `useRouter` only in Client; native GET form keeps `q`+`status` in URL simply.
-- Search polish (2026-10-12): status chip `href` via empty `URLSearchParams` + conditional `set` + `/?${params}` or `/`. Clear search link still TODO. Nits still open: optional types, hidden status only if set, drop unnecessary `"use client"` on SearchInput.
+- Search polish (2026-10-21): chip `href` via `URLSearchParams`; form GET + optional types; hidden status only if set; no `"use client"` on SearchInput; Clear search (omit `q`, keep `status`) + Clear filters → `/`.
 - Not in UI yet: OCR `extracted_text` (later).
 
 **Next session:**
-- Clear search (omit `q`, keep `status`) + remaining SearchInput nits. Then commit/PR if happy.
+- Commit/PR `feat/search-input-home` → `main` if happy.
 - Optional: Deploy su Vercel + env Supabase.
 
 ## Review notes (2026-09-07)
