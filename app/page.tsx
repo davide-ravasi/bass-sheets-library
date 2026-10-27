@@ -35,9 +35,13 @@ const filterAllActive = "border-border bg-muted text-foreground";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; difficulty?: string; q?: string }>;
 }) {
-  const { status: statusParam, q: queryParam } = await searchParams;
+  const {
+    status: statusParam,
+    difficulty: difficultyParam,
+    q: queryParam,
+  } = await searchParams;
   const status =
     statusParam === "to-learn" ||
     statusParam === "practicing" ||
@@ -53,6 +57,10 @@ export default async function Home({
 
   if (status) {
     query = query.eq("status", status);
+  }
+
+  if (difficultyParam) {
+    query = query.eq("difficulty", difficultyParam);
   }
 
   if (queryParam) {
@@ -95,6 +103,35 @@ export default async function Home({
                 className={cn(filterBase, isActive ? activeClass : filterIdle)}
               >
                 {label}
+              </Link>
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Filter by difficulty:
+          </span>
+          {[...Array(5)].map((_, index) => {
+            const params = new URLSearchParams();
+            if (index) {
+              params.set("difficulty", (index + 1).toString());
+            }
+            const isActive =
+              index === 0
+                ? !difficultyParam
+                : difficultyParam === (index + 1).toString();
+            if (queryParam) {
+              params.set("q", queryParam);
+            }
+            const href = params.toString() ? `/?${params.toString()}` : "/";
+
+            return (
+              <Link
+                key={index + 1}
+                href={href}
+                className={cn(filterBase, isActive ? filterAllActive : "")}
+              >
+                {index + 1}
               </Link>
             );
           })}
