@@ -35,9 +35,13 @@ const filterAllActive = "border-border bg-muted text-foreground";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; difficulty?: string; q?: string }>;
 }) {
-  const { status: statusParam, q: queryParam } = await searchParams;
+  const {
+    status: statusParam,
+    difficulty: difficultyParam,
+    q: queryParam,
+  } = await searchParams;
   const status =
     statusParam === "to-learn" ||
     statusParam === "practicing" ||
@@ -53,6 +57,10 @@ export default async function Home({
 
   if (status) {
     query = query.eq("status", status);
+  }
+
+  if (difficultyParam) {
+    query = query.eq("difficulty", difficultyParam);
   }
 
   if (queryParam) {
@@ -81,6 +89,9 @@ export default async function Home({
             if (value) {
               params.set("status", value);
             }
+            if (difficultyParam) {
+              params.set("difficulty", difficultyParam);
+            }
             if (queryParam) {
               params.set("q", queryParam);
             }
@@ -99,9 +110,43 @@ export default async function Home({
             );
           })}
         </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Filter by difficulty:
+          </span>
+          {[0, 1, 2, 3, 4, 5].map((level) => {
+            const params = new URLSearchParams();
+            if (level) {
+              params.set("difficulty", level.toString());
+            }
+            if (status) {
+              params.set("status", status);
+            }
+            if (queryParam) {
+              params.set("q", queryParam);
+            }
+            const isActive =
+              level === 0
+                ? !difficultyParam
+                : difficultyParam === level.toString();
+            const href = params.toString() ? `/?${params.toString()}` : "/";
 
-        <SearchInput searchParams={{ status, q: queryParam }} />
-        {(status || queryParam) && (
+            return (
+              <Link
+                key={level}
+                href={href}
+                className={cn(filterBase, isActive ? filterAllActive : "")}
+              >
+                {level === 0 ? "All" : level}
+              </Link>
+            );
+          })}
+        </div>
+
+        <SearchInput
+          searchParams={{ status, q: queryParam, difficulty: difficultyParam }}
+        />
+        {(status || queryParam || difficultyParam) && (
           <Link
             href="/"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"

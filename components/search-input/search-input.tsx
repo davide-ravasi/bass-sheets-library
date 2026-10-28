@@ -5,7 +5,7 @@ import Link from "next/link";
 export function SearchInput({
   searchParams,
 }: {
-  searchParams: { status?: string; q?: string };
+  searchParams: { status?: string; q?: string; difficulty?: string };
 }) {
   return (
     <form method="GET" action="/" className="flex flex-wrap items-center gap-2">
@@ -14,6 +14,13 @@ export function SearchInput({
       </span>
       {searchParams.status ? (
         <input type="hidden" name="status" value={searchParams.status} />
+      ) : null}
+      {searchParams.difficulty ? (
+        <input
+          type="hidden"
+          name="difficulty"
+          value={searchParams.difficulty}
+        />
       ) : null}
       <Input
         id="input-search"
@@ -24,7 +31,16 @@ export function SearchInput({
       />
       {searchParams.q && (
         <Link
-          href={`${searchParams.status ? "/?" + new URLSearchParams({ status: searchParams.status }).toString() : "/"}`}
+          href={(() => {
+            const params = new URLSearchParams();
+            if (searchParams.status) {
+              params.set("status", searchParams.status);
+            }
+            if (searchParams.difficulty) {
+              params.set("difficulty", searchParams.difficulty);
+            }
+            return params.toString() ? `/?${params.toString()}` : "/";
+          })()}
           className="text-sm text-muted-foreground hover:text-foreground"
         >
           Clear search

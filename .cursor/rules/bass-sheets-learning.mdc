@@ -28,10 +28,11 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 *Subito*
 1. ~~Merge PR search → `main`~~ ✅
-2. Deploy Vercel + env Supabase — **venerdì**.
+2. ~~Deploy Vercel + env Supabase~~ ✅ (2026-10-26; tipi Invoker Commands in `types/invoker-commands.d.ts`).
 
 *TAPPA 6 — resto filtri*
-3. Filtro difficulty (chip 1–5, stesso pattern status / URLSearchParams).
+3. ~~Filtro difficulty~~ ✅ su `feat/filter-difficulty` (All+1–5, persistenza status/q/difficulty, Clear search/filters). Merge PR quando pronto.
+3b. Prossima sessione (nit + refactor): validare difficulty `1…5` prima del `.eq`; `filterIdle` sui chip; **helper** per costruire href da filtri (`URLSearchParams` — evita di ripetere set status/difficulty/q in ogni chip/clear).
 4. Filtro genre / tags (array PostgREST).
 5. Ordinamento (newest / title / difficulty).
 6. (Opz.) Debounce search live — non urgente; GET submit ok.
@@ -47,7 +48,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 *Fuori scope per ora:* CI Actions / test dedicati (basta build Vercel); Auth stretta.
 
-**Next session (venerdì):** punto 2 — Deploy Vercel + env Supabase (learning/DIY). Poi 3 (difficulty) o altro dal programma.
+**Next session:** dopo merge difficulty (se non ancora) → helper `buildCatalogHref` (o simile) + nit validazione/`filterIdle`. Poi 4 (genre/tags) o altro.
 
 ## Review notes (2026-09-07)
 
