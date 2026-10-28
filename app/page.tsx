@@ -89,6 +89,9 @@ export default async function Home({
             if (value) {
               params.set("status", value);
             }
+            if (difficultyParam) {
+              params.set("difficulty", difficultyParam);
+            }
             if (queryParam) {
               params.set("q", queryParam);
             }
@@ -111,34 +114,39 @@ export default async function Home({
           <span className="text-sm text-muted-foreground">
             Filter by difficulty:
           </span>
-          {[...Array(5)].map((_, index) => {
+          {[0, 1, 2, 3, 4, 5].map((level) => {
             const params = new URLSearchParams();
-            if (index) {
-              params.set("difficulty", (index + 1).toString());
+            if (level) {
+              params.set("difficulty", level.toString());
             }
-            const isActive =
-              index === 0
-                ? !difficultyParam
-                : difficultyParam === (index + 1).toString();
+            if (status) {
+              params.set("status", status);
+            }
             if (queryParam) {
               params.set("q", queryParam);
             }
+            const isActive =
+              level === 0
+                ? !difficultyParam
+                : difficultyParam === level.toString();
             const href = params.toString() ? `/?${params.toString()}` : "/";
 
             return (
               <Link
-                key={index + 1}
+                key={level}
                 href={href}
                 className={cn(filterBase, isActive ? filterAllActive : "")}
               >
-                {index + 1}
+                {level === 0 ? "All" : level}
               </Link>
             );
           })}
         </div>
 
-        <SearchInput searchParams={{ status, q: queryParam }} />
-        {(status || queryParam) && (
+        <SearchInput
+          searchParams={{ status, q: queryParam, difficulty: difficultyParam }}
+        />
+        {(status || queryParam || difficultyParam) && (
           <Link
             href="/"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
