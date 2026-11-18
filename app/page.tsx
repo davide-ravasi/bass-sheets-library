@@ -9,6 +9,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/search-input/search-input";
+import { buildHref } from "@/lib/utils";
 
 type Status = "to-learn" | "practicing" | "mastered";
 
@@ -35,9 +36,13 @@ const filterAllActive = "border-border bg-muted text-foreground";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; difficulty?: string; q?: string }>;
 }) {
-  const { status: statusParam, q: queryParam } = await searchParams;
+  const {
+    status: statusParam,
+    difficulty: difficultyParam,
+    q: queryParam,
+  } = await searchParams;
   const status =
     statusParam === "to-learn" ||
     statusParam === "practicing" ||
@@ -53,6 +58,16 @@ export default async function Home({
 
   if (status) {
     query = query.eq("status", status);
+  }
+
+  const difficulty = difficultyParam === "1" ||
+                      difficultyParam === "2" ||
+                      difficultyParam === "3" ||
+                      difficultyParam === "4" ||
+                      difficultyParam === "5" ? difficultyParam : undefined;
+ 
+  if (difficulty) {
+    query = query.eq("difficulty", difficulty);
   }
 
   if (queryParam) {
@@ -77,14 +92,7 @@ export default async function Home({
           </span>
           {statusOptions.map(({ value, label }) => {
             const isActive = value === "" ? !status : status === value;
-            const params = new URLSearchParams();
-            if (value) {
-              params.set("status", value);
-            }
-            if (queryParam) {
-              params.set("q", queryParam);
-            }
-            const href = params.toString() ? `/?${params.toString()}` : "/";
+            const href = buildHref({ status: value, difficulty, query: queryParam });
             const activeClass =
               value === "" ? filterAllActive : statusStyle[value];
 
@@ -99,9 +107,34 @@ export default async function Home({
             );
           })}
         </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Filter by difficulty:
+          </span>
+          {[0, 1, 2, 3, 4, 5].map((level) => {
+            const href = buildHref({ status, difficulty: level === 0 ? undefined : level.toString(), query: queryParam });
 
-        <SearchInput searchParams={{ status, q: queryParam }} />
-        {(status || queryParam) && (
+            const isActive =
+              level === 0
+                ? !difficulty
+                : difficulty === level.toString();
+
+            return (
+              <Link
+                key={level}
+                href={href}
+                className={cn(filterBase, isActive ? filterAllActive : filterIdle)}
+              >
+                {level === 0 ? "All" : level}
+              </Link>
+            );
+          })}
+        </div>
+
+        <SearchInput
+          searchParams={{ status, q: queryParam, difficulty }}
+        />
+        {(status || queryParam || difficulty) && (
           <Link
             href="/"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
