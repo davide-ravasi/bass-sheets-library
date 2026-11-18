@@ -9,6 +9,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/search-input/search-input";
+import { buildHref } from "@/lib/utils";
 
 type Status = "to-learn" | "practicing" | "mastered";
 
@@ -59,8 +60,14 @@ export default async function Home({
     query = query.eq("status", status);
   }
 
-  if (difficultyParam) {
-    query = query.eq("difficulty", difficultyParam);
+  const difficulty = difficultyParam === "1" ||
+                      difficultyParam === "2" ||
+                      difficultyParam === "3" ||
+                      difficultyParam === "4" ||
+                      difficultyParam === "5" ? difficultyParam : undefined;
+ 
+  if (difficulty) {
+    query = query.eq("difficulty", difficulty);
   }
 
   if (queryParam) {
@@ -85,17 +92,7 @@ export default async function Home({
           </span>
           {statusOptions.map(({ value, label }) => {
             const isActive = value === "" ? !status : status === value;
-            const params = new URLSearchParams();
-            if (value) {
-              params.set("status", value);
-            }
-            if (difficultyParam) {
-              params.set("difficulty", difficultyParam);
-            }
-            if (queryParam) {
-              params.set("q", queryParam);
-            }
-            const href = params.toString() ? `/?${params.toString()}` : "/";
+            const href = buildHref({ status: value, difficulty, query: queryParam });
             const activeClass =
               value === "" ? filterAllActive : statusStyle[value];
 
@@ -115,27 +112,18 @@ export default async function Home({
             Filter by difficulty:
           </span>
           {[0, 1, 2, 3, 4, 5].map((level) => {
-            const params = new URLSearchParams();
-            if (level) {
-              params.set("difficulty", level.toString());
-            }
-            if (status) {
-              params.set("status", status);
-            }
-            if (queryParam) {
-              params.set("q", queryParam);
-            }
+            const href = buildHref({ status, difficulty: level === 0 ? undefined : level.toString(), query: queryParam });
+
             const isActive =
               level === 0
-                ? !difficultyParam
-                : difficultyParam === level.toString();
-            const href = params.toString() ? `/?${params.toString()}` : "/";
+                ? !difficulty
+                : difficulty === level.toString();
 
             return (
               <Link
                 key={level}
                 href={href}
-                className={cn(filterBase, isActive ? filterAllActive : "")}
+                className={cn(filterBase, isActive ? filterAllActive : filterIdle)}
               >
                 {level === 0 ? "All" : level}
               </Link>
@@ -144,9 +132,9 @@ export default async function Home({
         </div>
 
         <SearchInput
-          searchParams={{ status, q: queryParam, difficulty: difficultyParam }}
+          searchParams={{ status, q: queryParam, difficulty }}
         />
-        {(status || queryParam || difficultyParam) && (
+        {(status || queryParam || difficulty) && (
           <Link
             href="/"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"

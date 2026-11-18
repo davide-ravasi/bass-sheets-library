@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { buildHref } from "@/lib/utils";
 
 export function SearchInput({
   searchParams,
@@ -31,16 +32,7 @@ export function SearchInput({
       />
       {searchParams.q && (
         <Link
-          href={(() => {
-            const params = new URLSearchParams();
-            if (searchParams.status) {
-              params.set("status", searchParams.status);
-            }
-            if (searchParams.difficulty) {
-              params.set("difficulty", searchParams.difficulty);
-            }
-            return params.toString() ? `/?${params.toString()}` : "/";
-          })()}
+          href={buildHref({ status: searchParams.status, difficulty: searchParams.difficulty })}
           className="text-sm text-muted-foreground hover:text-foreground"
         >
           Clear search

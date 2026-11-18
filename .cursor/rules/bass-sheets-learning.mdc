@@ -13,7 +13,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 **Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
 
-**Progress (updated 2026-10-21):**
+**Progress (updated 2026-11-10):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
 - TAPPA 4: upload with preview, `fileInputKey`, full metadata form (Identity / Music / Practice / Classification / Notes / File). Required: title, artist, file. Empty → null. Arrays via comma-split (`genre`, `techniques`, `tags`). Select values match CHECKs (`status`, `difficulty`, `notation_type`).
 - TAPPA 5: home grid + detail `/sheets/[id]` — sticky aside, status Badge, music MetaChips, genre/techniques/tags chips, notes block, conditional nulls.
@@ -31,8 +31,12 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 2. ~~Deploy Vercel + env Supabase~~ ✅ (2026-10-26; tipi Invoker Commands in `types/invoker-commands.d.ts`).
 
 *TAPPA 6 — resto filtri*
-3. ~~Filtro difficulty~~ ✅ su `feat/filter-difficulty` (All+1–5, persistenza status/q/difficulty, Clear search/filters). Merge PR quando pronto.
-3b. Prossima sessione (nit + refactor): validare difficulty `1…5` prima del `.eq`; `filterIdle` sui chip; **helper** per costruire href da filtri (`URLSearchParams` — evita di ripetere set status/difficulty/q in ogni chip/clear).
+3. ~~Filtro difficulty~~ ✅ su `feat/filter-difficulty` (All+1–5, persistenza status/q/difficulty, Clear search/filters). Happy path verificato 2026-11-10. **Non mergiato.** Nit e helper non ancora scritti.
+3b. Prossima sessione, **DIY** (utente scrive il codice; agent spiega un passo e aspetta), in quest’ordine:
+   - Nit validazione: in `app/page.tsx` una variabile `difficulty` come `status` — solo `"1"`…`"5"`, altrimenti `undefined`. Usarla al posto di `difficultyParam` nel `.eq`, negli href, in `isActive`, in `SearchInput` e in “Clear filters”. `?difficulty=foo|0|9` = nessun filtro.
+   - Nit UI: `filterIdle` sui chip difficulty inattivi (oggi classe `""`; attivo resta `filterAllActive`).
+   - Refactor (dopo i nit): helper `buildCatalogHref({ status, difficulty, q })` così `URLSearchParams` + `set` non si ripetono in ogni chip/clear (`app/page.tsx` + `components/search-input/search-input.tsx`).
+   - Poi merge PR. Supabase free tier può essere in pausa: riattivare il progetto prima di provare la home.
 4. Filtro genre / tags (array PostgREST).
 5. Ordinamento (newest / title / difficulty).
 6. (Opz.) Debounce search live — non urgente; GET submit ok.
@@ -48,7 +52,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 *Fuori scope per ora:* CI Actions / test dedicati (basta build Vercel); Auth stretta.
 
-**Next session:** dopo merge difficulty (se non ancora) → helper `buildCatalogHref` (o simile) + nit validazione/`filterIdle`. Poi 4 (genre/tags) o altro.
+**Next session (2026-11-10, stop):** sei già su `feat/filter-difficulty` (non su `main`). Nessun codice nuovo oggi. Riparti in DIY dal nit validazione (`difficulty` ripulita), poi `filterIdle`, poi helper `buildCatalogHref`, poi merge. Genre/tags solo dopo. Niente deploy/CI.
 
 ## Review notes (2026-09-07)
 
