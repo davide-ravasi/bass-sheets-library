@@ -36,11 +36,12 @@ const filterAllActive = "border-border bg-muted text-foreground";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; difficulty?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; difficulty?: string; genre?: string; q?: string }>;
 }) {
   const {
     status: statusParam,
     difficulty: difficultyParam,
+    genre: genreParam,
     q: queryParam,
   } = await searchParams;
   const status =
@@ -68,6 +69,17 @@ export default async function Home({
  
   if (difficulty) {
     query = query.eq("difficulty", difficulty);
+  }
+
+  // genre is TEXT[] in the DB. .eq would require the whole array to equal
+  // the string; .contains (PostgREST cs) keeps rows whose array includes
+  // every value we pass. One value → [genres] → cs.{funk}. Several values
+  // (funk,rock) → cs.{funk,rock} = AND (all must be present), not OR.
+  // Use overlaps (ov) later if we want "any of these".
+  const genres = genreParam ? genreParam : undefined;
+
+  if (genres) {
+    query = query.contains("genre", [genres]);
   }
 
   if (queryParam) {
