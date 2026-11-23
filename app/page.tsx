@@ -104,7 +104,7 @@ export default async function Home({
           </span>
           {statusOptions.map(({ value, label }) => {
             const isActive = value === "" ? !status : status === value;
-            const href = buildHref({ status: value, difficulty, query: queryParam });
+            const href = buildHref({ status: value, difficulty, genre: genres, query: queryParam });
             const activeClass =
               value === "" ? filterAllActive : statusStyle[value];
 
@@ -124,7 +124,7 @@ export default async function Home({
             Filter by difficulty:
           </span>
           {[0, 1, 2, 3, 4, 5].map((level) => {
-            const href = buildHref({ status, difficulty: level === 0 ? undefined : level.toString(), query: queryParam });
+            const href = buildHref({ status, difficulty: level === 0 ? undefined : level.toString(), genre: genres, query: queryParam });
 
             const isActive =
               level === 0
@@ -144,9 +144,9 @@ export default async function Home({
         </div>
 
         <SearchInput
-          searchParams={{ status, q: queryParam, difficulty }}
+          searchParams={{ status, q: queryParam, difficulty, genre: genres }}
         />
-        {(status || queryParam || difficulty) && (
+        {(status || queryParam || difficulty || genres) && (
           <Link
             href="/"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
