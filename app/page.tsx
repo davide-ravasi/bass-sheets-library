@@ -36,11 +36,12 @@ const filterAllActive = "border-border bg-muted text-foreground";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; difficulty?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; difficulty?: string; genre?: string; q?: string }>;
 }) {
   const {
     status: statusParam,
     difficulty: difficultyParam,
+    genre: genreParam,
     q: queryParam,
   } = await searchParams;
   const status =
@@ -56,6 +57,16 @@ export default async function Home({
     .select("id, title, artist, thumbnail_url, created_at")
     .order("created_at", { ascending: false });
 
+  let genreQuery = supabase.from("sheets").select("genre");
+
+  const { data: genresData, error: genreError } = await genreQuery;
+
+  let genresList = genresData?.filter((genre) => Array.isArray(genre.genre) && genre.genre.length !== 0)
+                            .reduce((acc, curr) => [...acc, ...curr.genre], [] as string[]);
+  genresList = [...new Set(genresList)];
+  genresList?.sort((a, b) => a.localeCompare(b));
+  genresList?.unshift("All");
+
   if (status) {
     query = query.eq("status", status);
   }
@@ -68,6 +79,17 @@ export default async function Home({
  
   if (difficulty) {
     query = query.eq("difficulty", difficulty);
+  }
+
+  // genre is TEXT[] in the DB. .eq would require the whole array to equal
+  // the string; .contains (PostgREST cs) keeps rows whose array includes
+  // every value we pass. One value → [genres] → cs.{funk}. Several values
+  // (funk,rock) → cs.{funk,rock} = AND (all must be present), not OR.
+  // Use overlaps (ov) later if we want "any of these".
+  const genres = genreParam ? genreParam : undefined;
+
+  if (genres) {
+    query = query.contains("genre", [genres]);
   }
 
   if (queryParam) {
@@ -88,11 +110,30 @@ export default async function Home({
         <h1 className="text-2xl font-semibold tracking-tight">Sheet catalog</h1>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">
+            Filter by genre:
+          </span>
+          {genresList?.map((genre) => {
+            const isActive = genre === "All" ? !genres : genres === genre;
+            const href = buildHref({ status, difficulty, genre: genre === "All" ? undefined : genre, query: queryParam });
+
+            return (
+              <Link
+                key={genre}
+                href={href}
+                className={cn(filterBase, isActive ? filterAllActive : filterIdle)}
+              >
+                {genre.charAt(0).toUpperCase() + genre.slice(1)}
+              </Link>
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">
             Filter by status:
           </span>
           {statusOptions.map(({ value, label }) => {
             const isActive = value === "" ? !status : status === value;
-            const href = buildHref({ status: value, difficulty, query: queryParam });
+            const href = buildHref({ status: value, difficulty, genre: genres, query: queryParam });
             const activeClass =
               value === "" ? filterAllActive : statusStyle[value];
 
@@ -112,7 +153,7 @@ export default async function Home({
             Filter by difficulty:
           </span>
           {[0, 1, 2, 3, 4, 5].map((level) => {
-            const href = buildHref({ status, difficulty: level === 0 ? undefined : level.toString(), query: queryParam });
+            const href = buildHref({ status, difficulty: level === 0 ? undefined : level.toString(), genre: genres, query: queryParam });
 
             const isActive =
               level === 0
@@ -132,9 +173,9 @@ export default async function Home({
         </div>
 
         <SearchInput
-          searchParams={{ status, q: queryParam, difficulty }}
+          searchParams={{ status, q: queryParam, difficulty, genre: genres }}
         />
-        {(status || queryParam || difficulty) && (
+        {(status || queryParam || difficulty || genres) && (
           <Link
             href="/"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"

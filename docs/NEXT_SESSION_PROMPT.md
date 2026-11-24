@@ -11,18 +11,24 @@ Leggi prima:
 - `docs/DATABASE_SCHEMA.md` se tocchiamo DB/CHECK
 - Preferisci italiano; workflow pedagogico: spiega → aspetta OK → un passo; **DIY** (spiega, non scrivere il codice) salvo richiesta esplicita
 
-**Stato (stop 2026-11-18)**
-- `main` locale allineato a `origin/main`. Search, zoom, Vercel (`https://bass-sheets-library.vercel.app`).
-- Filtro difficulty **mergiato** (PR #7): chip All+1–5, persistenza status/`q`/difficulty, Clear search/filters. `difficulty` solo `"1"`…`"5"`; `filterIdle` sui chip inattivi; `buildHref` in `lib/utils.ts`. All non scrive `difficulty=0`.
-- Supabase free tier si mette in pausa: riattivare il progetto prima di provare la home.
+**Stato (stop 2026-11-23)**
+- Branch: `feat/add-filter-genre` (non su `main`). Difficulty già su `main` (PR #7).
+- Sul branch: commit query genre + commit persistenza URL.
+- Genre filtro **parziale**:
+  - Query: `?genre=` + `.contains("genre", [value])` (colonna `TEXT[]`, PostgREST `cs`).
+  - Persistenza: `buildHref` + chip status/difficulty + `SearchInput` (hidden + Clear search) + Clear filters include genre.
+  - URL corretto: `/?genre=funk` (niente `%22` / virgolette nel param).
+  - Multi-valore `funk,rock` = AND (tutti presenti); OR = `overlaps` più avanti se serve.
+- **Non fatto:** UI chip dinamici genre; tags. Campo testo genre scartato a favore dei chip.
 
-**Prossima sessione**
-1. Filtro genre / tags (array PostgREST), in DIY.
-2. Poi ordinamento (newest / title / difficulty), oppure altro che scelgo io.
+**Prossima sessione — DIY, in ordine**
+1. Lista generi: seconda query `.select("genre")` (dedicata, non dalle sheet filtrate) → flatten + `Set` + sort.
+2. Chip `Link` All + un chip per genere: `buildHref({ …, genre })`, `isActive` vs filtro corrente, `filterIdle` / `filterAllActive`.
+3. Poi tags (stesso schema) o merge PR, come scelgo io.
 
 Learning mode. Niente deploy/CI salvo richiesta.
 
-Partiamo dal filtro genre/tags.
+Partiamo dal punto 1 (lista generi).
 
 ---
 
@@ -30,7 +36,7 @@ Partiamo dal filtro genre/tags.
 
 ```bash
 git fetch origin
-git switch main
+git switch feat/add-filter-genre
 git pull
 npm install
 cp .env.example .env.local            # poi incolla URL + publishable key Supabase

@@ -6,7 +6,7 @@ import { buildHref } from "@/lib/utils";
 export function SearchInput({
   searchParams,
 }: {
-  searchParams: { status?: string; q?: string; difficulty?: string };
+  searchParams: { status?: string; q?: string; difficulty?: string; genre?: string };
 }) {
   return (
     <form method="GET" action="/" className="flex flex-wrap items-center gap-2">
@@ -23,6 +23,13 @@ export function SearchInput({
           value={searchParams.difficulty}
         />
       ) : null}
+      {searchParams.genre ? (
+        <input
+          type="hidden"
+          name="genre"
+          value={searchParams.genre}
+        />
+      ) : null}
       <Input
         id="input-search"
         type="text"
@@ -32,7 +39,7 @@ export function SearchInput({
       />
       {searchParams.q && (
         <Link
-          href={buildHref({ status: searchParams.status, difficulty: searchParams.difficulty })}
+          href={buildHref({ status: searchParams.status, difficulty: searchParams.difficulty, genre: searchParams.genre })}
           className="text-sm text-muted-foreground hover:text-foreground"
         >
           Clear search

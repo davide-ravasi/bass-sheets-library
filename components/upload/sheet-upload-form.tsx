@@ -88,7 +88,7 @@ export function SheetUploadForm() {
 
     const genreArray = genre
       .split(",")
-      .map((item) => item.trim())
+      .map((item) => item.trim().toLowerCase())
       .filter(Boolean);
 
     const techniquesArray = techniques
