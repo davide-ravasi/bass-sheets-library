@@ -13,7 +13,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 **Database schema & CHECKs:** `docs/DATABASE_SCHEMA.md` (Supabase UI often hides check constraints; use SQL there).
 
-**Progress (updated 2026-11-23):**
+**Progress (updated 2026-11-24):**
 - TAPPA 1–3 done (Next.js, shadcn, Supabase foundation).
 - TAPPA 4: upload with preview, `fileInputKey`, full metadata form (Identity / Music / Practice / Classification / Notes / File). Required: title, artist, file. Empty → null. Arrays via comma-split (`genre`, `techniques`, `tags`). Select values match CHECKs (`status`, `difficulty`, `notation_type`).
 - TAPPA 5: home grid + detail `/sheets/[id]` — sticky aside, status Badge, music MetaChips, genre/techniques/tags chips, notes block, conditional nulls.
@@ -24,7 +24,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 - TAPPA 6 search **merged to main** (2026-10-21): `?q=` + `.or` title/artist; AND status; form GET; `URLSearchParams` chips; Clear search / Clear filters.
 - Not in UI yet: OCR `extracted_text` (later).
 
-**Programma (aggiornato 2026-11-23) — tenere questo ordine:**
+**Programma (aggiornato 2026-11-24) — tenere questo ordine:**
 
 *Subito*
 1. ~~Merge PR search → `main`~~ ✅
@@ -32,10 +32,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 *TAPPA 6 — resto filtri*
 3. ~~Filtro difficulty~~ ✅ mergiato su `main` (PR #7, 2026-11-18). Chip All+1–5, persistenza status/`q`/difficulty, Clear search/filters. `difficulty` solo `"1"`…`"5"` (come `status`); `filterIdle` sui chip inattivi; `buildHref` in `lib/utils.ts` (chip + Clear search). All = nessun parametro (`undefined`, non `"0"`): in `isActive`, All è `!difficulty`. `"0"` è truthy in `if (difficulty)`.
-4. Filtro genre / tags (array PostgREST) — **in corso** su `feat/add-filter-genre` (commit query + persistenza già sul branch):
-   - Fatto: `?genre=` + `.contains("genre", [value])` (PostgREST `cs`; AND se più valori). Commento sopra il `.contains` in `app/page.tsx`. Persistenza in `buildHref` + chip status/difficulty + hidden/`Clear search` in `SearchInput` + `Clear filters` include `genres`. URL senza virgolette (`/?genre=funk`). Campo testo genre scartato.
-   - Imparato: colonna `genre` = `TEXT[]`; URL param = string; `.contains` vuole array JS → `cs.{...}`; virgolette `"` nell’URL (`%22`) non vanno nel param; multi-valore `funk,rock` = AND, non OR (`overlaps`/`ov` per OR).
-   - Prossima sessione DIY: **chip dinamici genre**. Query dedicata `.select("genre")` → unisci array, dedupe (`Set`), ordina → chip `Link` + All (`genre` undefined) + `isActive` vs filtro corrente. Poi tags (stesso schema) o merge.
+4. ~~Filtro genre~~ ✅ mergiato su `main` (PR #8, 2026-11-24). `?genre=` + `.contains` (`cs`); persistenza in `buildHref` + SearchInput + Clear filters; chip dinamici (query `.select("genre")` → flatten + `Set` + sort + All); upload `genre` in lowercase; DB già normalizzato minuscolo. Tags (stesso schema) ancora da fare.
 5. Ordinamento (newest / title / difficulty).
 6. (Opz.) Debounce search live — non urgente; GET submit ok.
 
@@ -50,7 +47,7 @@ Read `docs/PROJECT_BRAINSTORMING.md` before planning or coding. Follow its tappe
 
 *Fuori scope per ora:* CI Actions / test dedicati (basta build Vercel); Auth stretta.
 
-**Next session (2026-11-23, stop):** branch `feat/add-filter-genre`. Persistenza genre OK; niente UI chip ancora. Riparti DIY dai chip dinamici (prima lista generi da DB, poi Link). Tags dopo. Niente deploy/CI salvo richiesta. Supabase free tier può essere in pausa.
+**Next session (2026-11-24):** sei su `main` (PR #8). Prossimo DIY: filtro tags (stesso schema di genre), oppure ordinamento. Niente deploy/CI salvo richiesta. Supabase free tier può essere in pausa.
 
 ## Review notes (2026-09-07)
 
