@@ -57,6 +57,16 @@ export default async function Home({
     .select("id, title, artist, thumbnail_url, created_at")
     .order("created_at", { ascending: false });
 
+  let genreQuery = supabase.from("sheets").select("genre");
+
+  const { data: genresData, error: genreError } = await genreQuery;
+
+  let genresList = genresData?.filter((genre) => Array.isArray(genre.genre) && genre.genre.length !== 0)
+                            .reduce((acc, curr) => [...acc, ...curr.genre], [] as string[]);
+  genresList = [...new Set(genresList)];
+  genresList?.sort((a, b) => a.localeCompare(b));
+  genresList?.unshift("All");
+
   if (status) {
     query = query.eq("status", status);
   }
@@ -98,6 +108,25 @@ export default async function Home({
     <div className="space-y-6">
       <div className="space-y-3">
         <h1 className="text-2xl font-semibold tracking-tight">Sheet catalog</h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Filter by genre:
+          </span>
+          {genresList?.map((genre) => {
+            const isActive = genre === "All" ? !genres : genres === genre;
+            const href = buildHref({ status, difficulty, genre: genre === "All" ? undefined : genre, query: queryParam });
+
+            return (
+              <Link
+                key={genre}
+                href={href}
+                className={cn(filterBase, isActive ? filterAllActive : filterIdle)}
+              >
+                {genre.charAt(0).toUpperCase() + genre.slice(1)}
+              </Link>
+            );
+          })}
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">
             Filter by status:
